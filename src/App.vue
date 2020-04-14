@@ -3,8 +3,14 @@
     id="app"
     class="drop-zone"
     @dragover.stop.prevent="onDragover"
-    @drop.stop.prevent="onDrop"
+    @drop.stop.prevent="onFileUpload($event.dataTransfer.files)"
   >
+    <input
+      type="file"
+      name="file-upload"
+      accept=".html"
+      @change="onFileUpload($event.target.files)"
+    />
     Drop a file anywhere in the window
   </div>
 </template>
@@ -16,9 +22,9 @@ export default {
     onDragover(event) {
       event.dataTransfer.dropEffect = 'copy';
     },
-    onDrop(event) {
+    onFileUpload(files) {
       // Source: https://www.html5rocks.com/en/tutorials/file/dndfiles/
-      const [file] = event.dataTransfer.files;
+      const [file] = files;
 
       if (!file.type.match('text/html')) {
         console.log('Expecting HTML file, returning...');
