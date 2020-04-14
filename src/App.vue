@@ -16,8 +16,24 @@
 </template>
 
 <script>
+import cleanRaindropExport from './lib/clean-raindrop-export';
+import parseRaindropExport from './lib/parse-raindrop-export';
+
 export default {
   name: 'App',
+  computed: {
+    cleanedRaindropExport() {
+      return cleanRaindropExport(this.fileContent);
+    },
+    parsedRaindropExport() {
+      return parseRaindropExport(this.cleanedRaindropExport);
+    }
+  },
+  data() {
+    return {
+      fileContent: ''
+    };
+  },
   methods: {
     onDragover(event) {
       event.dataTransfer.dropEffect = 'copy';
@@ -32,9 +48,8 @@ export default {
       }
 
       const reader = new FileReader();
-      reader.onload = function(event) {
-        const fileContent = event.target.result;
-        console.log('Do we have filecontents?', !!fileContent);
+      reader.onload = event => {
+        this.fileContent = event.target.result;
       };
       reader.readAsText(file);
     }
